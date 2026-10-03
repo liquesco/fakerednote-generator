@@ -933,7 +933,7 @@
  </div>
 
  <div class="time-wheel-trigger-btn" onclick="toggleTimeWheelModal(event)" title="选择时间">
- <img src="avatars/chevrons-up-down.svg" alt="切换" class="chevrons-icon">
+ <img src="./avatars/chevrons-up-down.svg" alt="切换" class="chevrons-icon">
  </div>
 
  <div class="time-random-btns">
@@ -1044,11 +1044,11 @@
  </div>
  
  <div class="icons-outer-box">
- <img src="avatars/bars.svg" class="cellular-img" alt="蜂巢信号" width="19" height="12">
- <img src="avatars/wifi.svg" class="wifi-img" alt="无线网" width="17" height="12">
+ <img src="./avatars/bars.svg" class="cellular-img" alt="蜂巢信号" width="19" height="12">
+ <img src="./avatars/wifi.svg" class="wifi-img" alt="无线网" width="17" height="12">
  
  <div class="battery-group">
- <img src="avatars/battery.svg" class="battery-bg-img" alt="电池外框" width="100" height="22">
+ <img src="./avatars/battery.svg" class="battery-bg-img" alt="电池外框" width="100" height="22">
  <div class="battery-capacity-box" id="battery-capacity-box"></div>
  </div>
  </div>
@@ -1066,7 +1066,7 @@
 
  <div class="profile-header">
  <div class="avatar-row">
- <img class="avatar-img" id="preview-avatar" src="avatars/user01.jpg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'80\'><circle cx=\'40\' cy=\'40\' r=\'40\' fill=\'%23FF2442\'/></svg>'" alt="头像">
+ <img class="avatar-img" id="preview-avatar" src="./avatars/user01.jpg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'80\'><circle cx=\'40\' cy=\'40\' r=\'40\' fill=\'%23FF2442\'/></svg>'" alt="头像">
  <div class="user-info-main">
  <div class="nickname-row">
  <span class="nickname" id="preview-nickname">liquesco</span>
@@ -1231,7 +1231,7 @@
  nickname: 'liquesco',
  userId: 'liquesco_',
  ipCity: '浙江',
- avatarUrl: 'avatars/user01.jpg',
+ avatarUrl: './avatars/user01.jpg',
  bio: '点击这里，填写简介...',
  follow: '37',
  fans: '42',
@@ -1433,7 +1433,7 @@
  function randomAvatar() {
  const randomNum = Math.floor(Math.random() * 18) + 1;
  const formattedNum = randomNum < 10 ? '0' + randomNum : randomNum;
- userData.avatarUrl = `avatars/user${formattedNum}.jpg`;
+ userData.avatarUrl = `./avatars/user${formattedNum}.jpg`;
  document.getElementById('preview-avatar').src = userData.avatarUrl;
  }
 
