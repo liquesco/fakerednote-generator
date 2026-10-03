@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+ <meta charset="UTF-8">
+ <meta name="theme-color" content="#FF2442">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+ <title>小红书生成器</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+ <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+ <style>
+ .time-row-group label, .row-group label, .ip-row label, .stat-row label {
+ font-size: 13px !important;
+ font-weight: 600;
+ color: #555;
+ width: 52px;
+ flex-shrink: 0;
+ }
+ * { 
+ box-sizing: border-box; 
+ margin: 0; 
+ padding: 0; 
+ font-family: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+ -webkit-tap-highlight-color: transparent;
+ touch-action: manipulation;
+ }
+ 
+ html, body {
+ background-color: #f4f5f7;
+ color: #333;
+ min-height: 100%;
+ }
+
+ body.no-scroll {
+ overflow: hidden;
+ height: 100vh;
+ }
+
+ .container { 
+ max-width: 480px; 
+ margin: 16px auto; 
+ padding: 0 12px 30px 12px; 
+ }
+
+ .header-branding {
+ margin-bottom: 20px;
+ text-align: left;
+ }
+ .header-title {
+ font-size: 30px;
+ font-weight: 800;
+ color: #111;
+ line-height: 1.1;
+ margin-bottom: 4px;
+ letter-spacing: -0.5px;
+ }
+ .header-sub {
+ font-size: 14px;
+ color: #111;
+ font-weight: 800;
+ font-family: -apple-system, BlinkMacSystemFont, "SF Mono", Consolas, monospace;
+ margin-bottom: 4px;
+ letter-spacing: 1px;
+ }
+ .header-comment {
+ font-size: 12px;
+ color: #888;
+ font-weight: 500;
+ margin-bottom: 14px;
+ }
+
+ .header-nav-btns {
+ display: flex;
+ gap: 8px;
+ margin-top: 10px;
+ }
+ .nav-btn-item {
+ flex: 1;
+ padding: 8px 0;
+ border: 1px solid #eaeaea;
+ border-radius: 20px;
+ font-size: 13px;
+ font-weight: 600;
+ cursor: pointer;
+ background-color: #ffffff !important;
+ color: #666;
+ text-align: center;
+ box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+ transition: all 0.2s ease;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ gap: 6px;
+ }
+ .nav-btn-item .dot {
+ width: 7px;
+ height: 7px;
+ border-radius: 50%;
+ background-color: #999999;
+ display: inline-block;
+ transition: background-color 0.2s ease;
+ }
+ .nav-btn-item:hover .dot,
+ .nav-btn-item.active .dot {
+ background-color: #FF2442;
+ }
+ .nav-btn-item.active {
+ color: #111;
+ font-weight: 700;
+ border-color: #e0e0e0;
+ }
+
+ .blank-page-panel {
+ background: white;
+ border-radius: 14px;
+ padding: 80px 20px;
+ text-align: center;
+ color: #999;
+ font-size: 14px;
+ box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+ margin-top: 10px;
+ min-height: 350px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ }
+ 
+ .panel {
+ background: white;
+ border-radius: 14px;
+ padding: 14px;
+ margin-bottom: 16px;
+ box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+ }
+
+ .row-group {
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ margin-bottom: 12px;
+ min-height: 34px;
+ }
+ .row-group label, .row-label {
+ font-size: 13px;
+ color: #555;
+ font-weight: 600;
+ white-space: nowrap;
+ width: 52px;
+ flex-shrink: 0;
+ }
+ .row-group input[type="text"] {
+ flex: 1;
+ width: 100%;
+ min-width: 0;
+ padding: 8px 10px;
+ border: 1px solid #e0e0e0;
+ border-radius: 8px;
+ font-size: 13px;
+ outline: none;
+ background: #fafafa;
+ }
+
+ input[type="range"] {
+ accent-color: #FF2442;
+ }
+
+ .time-row-group {
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ margin-bottom: 10px;
+ position: relative;
+ }
+
+ .time-picker-wrapper {
+ display: flex;
+ align-items: center;
+ gap: 2px; 
+ flex-shrink: 0;
+ }
+ .time-box-item {
+ display: flex;
+ align-items: center;
+ background: #ffffff;
+ border: 1px solid #dcdfe6;
+ border-radius: 8px;
+ padding: 2px 3px;
+ height: 32px;
+ box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+ }
+ .time-box-item input {
+ width: 40px;
+ border: none;
+ background: transparent;
+ outline: none;
+ font-size: 13px;
+ font-weight: 600;
+ color: #333;
+ text-align: center;
+ font-family: inherit;
+ padding: 0;
+ }
+
+ .time-random-btns {
+ display: flex;
+ gap: 4px;
+ flex: 1;
+ }
+ 
+ .time-random-btns .btn-sm {
+ flex: 1;
+ padding: 0px 4px;
+ height: 32px;
+ line-height: 32px;
+ font-size: 12px;
+ text-align: center;
+ border: none;
+ background-color: #f0f1f3;
+ border-radius: 6px;
+ cursor: pointer;
+ }
+
+ .time-wheel-trigger-btn {
+ background: transparent !important;
+ border: none !important;
+ padding: 0 !important;
+ margin: 0 4px 0 0 !important;
+ display: flex !important;
+ align-items: center;
+ justify-content: flex-start;
+ cursor: pointer;
+ box-shadow: none !important;
+ }
+ .chevrons-icon {
+ width: auto;
+ height: 14px;
+ display: block;
+ pointer-events: none;
+ transform: scaleX(0.8);
+ transform-origin: left center;
+ }
+
+ .time-popover {
+ display: none;
+ position: absolute;
+ top: 40px;
+ left: 56px;
+ z-index: 1000;
+ background: #ffffff;
+ border-radius: 12px;
+ box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+ border: 1px solid #eaeaea;
+ padding: 8px 12px 12px 12px;
+ width: 220px;
+ animation: fadeIn 0.15s ease-out;
+ }
+ .time-popover::before {
+ content: '';
+ position: absolute;
+ top: -6px;
+ left: 24px;
+ width: 10px;
+ height: 10px;
+ background: #ffffff;
+ transform: rotate(45deg);
+ border-top: 1px solid #eaeaea;
+ border-left: 1px solid #eaeaea;
+ }
+ @keyframes fadeIn {
+ from { opacity: 0; transform: translateY(-6px); }
+ to { opacity: 1; transform: translateY(0); }
+ }
+ .popover-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding-bottom: 6px;
+ border-bottom: 1px solid #f0f0f0;
+ }
+ .popover-header button {
+ background: none;
+ border: none;
+ font-size: 13px;
+ font-weight: 600;
+ cursor: pointer;
+ padding: 2px 4px;
+ }
+ .picker-btn-cancel { color: #888; }
+ .picker-btn-confirm { color: #FF2442; }
+ .picker-title { font-weight: bold; font-size: 13px; color: #333; }
+
+ .picker-wheels-wrapper {
+ position: relative;
+ height: 150px;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ gap: 10px;
+ margin-top: 6px;
+ overflow: hidden;
+ }
+ .picker-selection-overlay {
+ position: absolute;
+ top: 60px;
+ left: 5%;
+ right: 5%;
+ height: 30px;
+ border-top: 1px solid rgba(0,0,0,0.12);
+ border-bottom: 1px solid rgba(0,0,0,0.12);
+ background: rgba(0,0,0,0.03);
+ border-radius: 6px;
+ pointer-events: none;
+ }
+ .picker-wheel-col {
+ flex: 1;
+ height: 150px;
+ overflow-y: scroll;
+ scroll-snap-type: y mandatory;
+ scrollbar-width: none;
+ -ms-overflow-style: none;
+ text-align: center;
+ }
+ .picker-wheel-col::-webkit-scrollbar { display: none; }
+
+ .picker-wheel-spacer {
+ height: 60px;
+ }
+ .picker-wheel-item {
+ height: 30px;
+ line-height: 30px;
+ font-size: 16px;
+ font-weight: 500;
+ color: #222;
+ scroll-snap-align: center;
+ cursor: pointer;
+ user-select: none;
+ }
+
+ .input-with-prefix {
+ flex: 1;
+ display: flex;
+ align-items: center;
+ border: 1px solid #e0e0e0;
+ border-radius: 8px;
+ background: #fafafa;
+ padding-left: 8px;
+ min-width: 0;
+ }
+ .input-with-prefix input {
+ border: none !important;
+ background: transparent !important;
+ padding: 8px 6px 8px 2px !important;
+ width: 100%;
+ outline: none;
+ font-size: 13px;
+ }
+
+ .btn-sm {
+ padding: 8px 6px;
+ border: none;
+ border-radius: 8px;
+ font-size: 12px;
+ font-weight: 600;
+ cursor: pointer;
+ white-space: nowrap;
+ flex: 1;
+ text-align: center;
+ background-color: #f0f1f3;
+ color: #444;
+ user-select: none;
+ transition: background 0.15s;
+ }
+ .btn-sm:active {
+ background-color: #e2e4e8;
+ }
+
+ .ip-row, .stat-row {
+ display: flex;
+ gap: 6px;
+ margin-bottom: 10px;
+ align-items: center;
+ }
+
+ .stat-input-custom {
+ background: #fafafa; 
+ flex: 1.2; 
+ min-width: 0; 
+ padding: 8px; 
+ border: 1px solid #e0e0e0; 
+ border-radius: 8px; 
+ font-size: 12px; 
+ outline: none;
+ }
+
+ .textarea-group { margin-bottom: 10px; }
+ .textarea-group label { display: block; font-size: 13px; color: #555; font-weight: 600; margin-bottom: 5px; }
+ .textarea-group textarea {
+ width: 100%; height: 50px; padding: 8px 10px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 13px; outline: none; resize: none; background: #fafafa;
+ }
+
+ .inline-title-header {
+ margin-bottom: 10px;
+ display: flex;
+ align-items: baseline;
+ gap: 8px;
+ padding-left: 2px;
+ }
+ .preview-title-main {
+ font-size: 18px;
+ font-weight: bold;
+ color: #222;
+ line-height: 1.2;
+ }
+ .preview-title-sub {
+ font-size: 12px;
+ color: #888;
+ font-weight: 500;
+ }
+
+ .preview-section {
+ background: white;
+ border-radius: 14px;
+ padding: 14px;
+ box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ width: 100%;
+ }
+
+ .btn-row {
+ display: flex;
+ gap: 10px;
+ width: 100%;
+ margin-bottom: 12px;
+ }
+
+ .btn-export {
+ flex: 1;
+ padding: 12px;
+ background: #FF2442;
+ color: white;
+ border: none;
+ border-radius: 10px;
+ font-weight: bold;
+ font-size: 13px;
+ cursor: pointer;
+ box-shadow: 0 3px 8px rgba(255,36,66,0.2);
+ }
+
+ .btn-reset {
+ flex: 1;
+ padding: 12px;
+ background: #f0f1f3;
+ color: #666;
+ border: none;
+ border-radius: 10px;
+ font-weight: 600;
+ font-size: 13px;
+ cursor: pointer;
+ }
+
+ .phone-wrapper {
+ width: 100%;
+ border-radius: 12px;
+ border: 1px solid #eaeaea;
+ background: #5b6571;
+ display: flex;
+ justify-content: center;
+ align-items: flex-start;
+ padding: 0;
+ overflow: hidden;
+ }
+
+ .scale-box {
+ width: 100%;
+ position: relative;
+ }
+ .canvas-target {
+ width: 402px;
+ height: 874px;
+ background: #FD7086;
+ position: relative;
+ display: flex;
+ flex-direction: column;
+ transform-origin: top left;
+ color: #fff;
+ overflow: visible;
+ }
+
+ .status-bar-ios-custom {
+ position: absolute;
+ width: 402px;
+ height: 59px;
+ left: 0;
+ top: 0;
+ z-index: 100;
+ pointer-events: none;
+ }
+
+ .time-outer-box {
+ position: absolute;
+ left: 24px;
+ top: 19px;
+ width: 100px;
+ height: 22px;
+ }
+
+ .custom-time-container {
+ position: absolute;
+ left: 32px;
+ top: 0.75px;
+ width: 36px;
+ height: 22px;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ }
+
+ .custom-time-text {
+ font-family: 'SF Pro', 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+ font-style: normal;
+ font-weight: 590;
+ font-size: 17px;
+ line-height: 22px;
+ text-align: center;
+ letter-spacing: -0.43px;
+ color: #FFFFFF !important;
+ white-space: nowrap;
+ }
+
+ .icons-outer-box {
+ position: absolute;
+ overflow: visible;
+ left: 274px;
+ top: 19px;
+ width: 128px;
+ height: 22px;
+ }
+
+ .cellular-img {
+ position: absolute;
+ left: 10.67px;
+ top: 5.39px;
+ width: 19.2px;
+ height: 12.23px;
+ display: block;
+ }
+
+ .wifi-img {
+ position: absolute;
+ left: 36.87px;
+ top: 5.34px;
+ width: 17.14px;
+ height: 12.33px;
+ display: block;
+ }
+
+ .battery-group {
+ position: absolute;
+ left: 61.01px;
+ top: 5px;
+ width: 27.33px;
+ height: 13px;
+ }
+
+ .battery-bg-img {
+ position: absolute;
+ left: 0;
+ top: 0;
+ width: 27.33px;
+ height: 13px;
+ z-index: 1;
+ display: block;
+ }
+
+ .battery-capacity-box {
+ position: absolute;
+ left: 2px;
+ top: 2px;
+ height: 9px;
+ background-color: #FFFFFF;
+ border-radius: 1.5px;
+ transition: width 0.1s ease, background-color 0.1s ease;
+ z-index: 2;
+ }
+
+ .app-top-nav {
+ height: 40px;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: 0 18px;
+ margin-top: 59px;
+ }
+ .nav-btn-svg {
+ width: 24px;
+ height: 24px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ cursor: pointer;
+ }
+
+ .profile-header {
+ padding: 10px 20px 16px 20px;
+ }
+ .avatar-row {
+ display: flex;
+ align-items: center;
+ gap: 16px;
+ }
+ .avatar-img {
+ width: 80px;
+ height: 80px;
+ border-radius: 50%;
+ object-fit: cover;
+ border: 1px solid rgba(255,255,255,0.2);
+ }
+ .user-info-main {
+ display: flex;
+ flex-direction: column;
+ gap: 4px;
+ }
+ .nickname-row .nickname {
+ font-size: 18px;
+ font-weight: bold;
+ color: #ffffff;
+ }
+ .sub-info {
+ font-size: 11px;
+ color: rgba(255,255,255,0.7);
+ }
+
+ .stats-row {
+ display: flex;
+ gap: 16px;
+ margin-top: 16px;
+ font-size: 13px;
+ }
+ .stats-item span.num {
+ font-weight: bold;
+ font-size: 15px;
+ margin-right: 3px;
+ }
+ .stats-item span.label {
+ color: rgba(255,255,255,0.8);
+ font-size: 12px;
+ }
+
+ .bio-text {
+ margin-top: 12px;
+ font-size: 12px;
+ color: rgba(255,255,255,0.9);
+ line-height: 1.4;
+ }
+ 
+ .action-btns {
+ display: flex;
+ gap: 10px;
+ margin-top: 14px;
+ align-items: center;
+ }
+ .btn-follow {
+ flex: 1;
+ background: #FF2442;
+ color: #fff;
+ border: none;
+ padding: 8px 0;
+ border-radius: 8px;
+ font-size: 13px;
+ font-weight: bold;
+ text-align: center;
+ }
+ .btn-msg {
+ flex: 1;
+ background: rgba(255,255,255,0.15);
+ color: #fff;
+ border: none;
+ padding: 8px 0;
+ border-radius: 8px;
+ font-size: 13px;
+ font-weight: 500;
+ text-align: center;
+ }
+ .btn-more-user {
+ width: 34px;
+ height: 33px;
+ background: rgba(255,255,255,0.15);
+ border-radius: 8px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ }
+
+ .content-body {
+ flex: 1;
+ background: #f4f5f7;
+ border-top-left-radius: 16px;
+ border-top-right-radius: 16px;
+ color: #333;
+ display: flex;
+ flex-direction: column;
+ overflow: hidden;
+ }
+
+ .tabs-bar {
+ display: flex;
+ align-items: center;
+ gap: 20px;
+ padding: 12px 20px 10px 20px;
+ border-bottom: 1px solid #eaeaea;
+ font-size: 14px;
+ color: #666;
+ }
+ .tab-item.active {
+ color: #111;
+ font-weight: bold;
+ position: relative;
+ }
+ .tab-item.active::after {
+ content: '';
+ position: absolute;
+ bottom: -10px;
+ left: 50%;
+ transform: translateX(-50%);
+ width: 16px;
+ height: 2px;
+ background: #FF2442;
+ border-radius: 2px;
+ }
+ .search-icon-box {
+ margin-left: auto;
+ display: flex;
+ align-items: center;
+ }
+
+ .feed-grid {
+ display: flex;
+ gap: 8px;
+ padding: 10px;
+ flex: 1;
+ }
+ .feed-col {
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ gap: 8px;
+ }
+ .note-card {
+ background: #fff;
+ border-radius: 8px;
+ overflow: hidden;
+ display: flex;
+ flex-direction: column;
+ }
+
+ .card-img-block {
+ width: 100%;
+ aspect-ratio: 3 / 4;
+ position: relative;
+ }
+
+ .pin-badge {
+ position: absolute;
+ top: 6px;
+ left: 6px;
+ background: #FF2442;
+ color: white;
+ font-size: 9px;
+ padding: 1px 4px;
+ border-radius: 4px;
+ font-weight: bold;
+ }
+ .card-title {
+ font-size: 12px;
+ font-weight: bold;
+ color: #222;
+ padding: 6px 8px 6px 8px;
+ line-height: 1.3;
+ }
+
+ .card-footer {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ padding: 0 8px 8px 8px;
+ font-size: 10px;
+ color: #888;
+ }
+ .author-info {
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ }
+ .author-avatar {
+ width: 16px;
+ height: 16px;
+ border-radius: 50%;
+ background: #FF2442;
+ flex-shrink: 0;
+ }
+ .author-text-col {
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ line-height: 1.1;
+ }
+ .author-name {
+ font-size: 10px;
+ color: #555;
+ }
+ .note-date {
+ font-size: 8px;
+ color: #999;
+ margin-top: 1px;
+ }
+ .like-box {
+ display: flex;
+ align-items: center;
+ gap: 2px;
+ color: #666;
+ }
+
+ .mobile-export-modal {
+ display: none;
+ position: fixed;
+ top: 0;
+ left: 0;
+ width: 100vw;
+ height: 100vh;
+ background: rgba(0, 0, 0, 0.75);
+ backdrop-filter: blur(10px);
+ -webkit-backdrop-filter: blur(10px);
+ z-index: 999;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ padding: 20px;
+ }
+ .mobile-export-modal p {
+ color: #fff;
+ font-size: 14px;
+ margin-bottom: 12px;
+ font-weight: bold;
+ text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+ }
+
+ .modal-img-container {
+ max-width: 85%;
+ max-height: 70vh;
+ border-radius: 12px;
+ background-color: #000000;
+ overflow: hidden;
+ box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ }
+
+ .mobile-export-modal img {
+ width: 100%;
+ height: 100%;
+ max-height: 70vh;
+ border-radius: 12px;
+ object-fit: contain;
+ display: block;
+ -webkit-touch-callout: default;
+ opacity: 1;
+ }
+
+ .mobile-export-modal .btn-close {
+ position: absolute;
+ top: 24px;
+ right: 20px;
+ width: 32px;
+ height: 32px;
+ background: rgba(255, 255, 255, 0.2);
+ color: #fff;
+ border: 1px solid rgba(255, 255, 255, 0.3);
+ border-radius: 50%;
+ font-size: 16px;
+ line-height: 30px;
+ text-align: center;
+ cursor: pointer;
+ padding: 0;
+ margin: 0;
+ }
+ </style>
+</head>
+<body>
+
+ <div class="container">
+ <div class="header-branding">
+ <div class="header-title">小红书生成器</div>
+ <div class="header-sub">fakerednote generator 0.1.0-wip</div>
+ <div class="header-comment">编辑内容、实时预览，再导出高清png。所有数据只在浏览器中处理，不上传网络。</div>
+ <div class="header-nav-btns">
+ <button id="btn-profile" class="nav-btn-item active" onclick="switchNav('profile')">
+ <span class="dot"></span>个人资料
+ </button>
+ <button id="btn-waterfall" class="nav-btn-item" onclick="switchNav('waterfall')">
+ <span class="dot"></span>瀑布流
+ </button>
+ <button id="btn-detail" class="nav-btn-item" onclick="switchNav('detail')">
+ <span class="dot"></span>帖子详情
+ </button>
+ <button id="btn-settings" class="nav-btn-item" onclick="switchNav('settings')">
+ <span class="dot"></span>更多设置
+ </button>
+ </div>
+ </div>
+
+ <!-- 个人资料 Tab 内容 -->
+ <div id="tab-profile">
+ <div class="inline-title-header">
+ <span class="preview-title-main">个人资料</span>
+ <span class="preview-title-sub">设置基础信息和个人资料</span>
+ </div>
+
+ <div class="panel">
+ <div class="time-row-group">
+ <label>时间</label>
+ <div class="time-picker-wrapper">
+ <div class="time-box-item">
+ <input type="text" id="input-time-hour" value="09" maxlength="2" oninput="updateStatusHeader()">
+ </div>
+ <span style="font-weight: bold; color: #333; font-size: 12px;">:</span>
+ <div class="time-box-item">
+ <input type="text" id="input-time-minute" value="41" maxlength="2" oninput="updateStatusHeader()">
+ </div>
+ </div>
+
+ <div class="time-wheel-trigger-btn" onclick="toggleTimeWheelModal(event)" title="选择时间">
+ <img src="avatars/chevrons-up-down.svg" alt="切换" class="chevrons-icon">
+ </div>
+
+ <div class="time-random-btns">
+ <button class="btn-sm" onclick="setRandomTimePeriod('morning')">上午</button>
+ <button class="btn-sm" onclick="setRandomTimePeriod('afternoon')">下午</button>
+ <button class="btn-sm" onclick="setRandomTimePeriod('night')">夜间</button>
+ <button class="btn-sm" onclick="setRandomTimePeriod('now')">现在</button>
+ </div>
+
+ <div class="time-popover" id="time-wheel-popover" onclick="event.stopPropagation()">
+ <div class="popover-header">
+ <button class="picker-btn-cancel" onclick="closeTimeWheelModal()">取消</button>
+ <span class="picker-title">选择时间</span>
+ <button class="picker-btn-confirm" onclick="confirmTimeWheel()">完成</button>
+ </div>
+ <div class="picker-wheels-wrapper">
+ <div class="picker-selection-overlay"></div>
+ <div class="picker-wheel-col" id="wheel-hour-col"></div>
+ <div style="font-size: 16px; font-weight: bold; line-height: 150px; color: #333;"></div>
+ <div class="picker-wheel-col" id="wheel-min-col"></div>
+ </div>
+ </div>
+ </div>
+
+ <div class="row-group">
+ <label>电量</label>
+ <input type="range" id="input-status-battery" min="0" max="100" value="80" style="flex:1" oninput="updateStatusHeader()">
+ <span id="battery-num-text" style="font-size: 12px; min-width: 35px; text-align: right;">80%</span>
+ </div>
+
+ <div class="row-group">
+ <label>名字</label>
+ <input type="text" id="input-nickname" value="liquesco" oninput="updatePreview()">
+ </div>
+
+ <div class="row-group">
+ <label>用户ID</label>
+ <div class="input-with-prefix">
+ <input type="text" id="input-userid" value="liquesco_" oninput="updatePreview()">
+ </div>
+ </div>
+
+ <div class="row-group">
+ <label>头像</label>
+ <button class="btn-sm" onclick="randomAvatar()">随机</button>
+ <button class="btn-sm" onclick="document.getElementById('file-input').click()">上传</button>
+ <input type="file" id="file-input" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
+ </div>
+
+ <div class="ip-row">
+ <label class="row-label">IP属地</label>
+ <input class="stat-input-custom" type="text" id="input-ip-custom" placeholder="自定义" value="浙江" oninput="setCustomIP()">
+ <button class="btn-sm" onclick="setRandomIP('cn')">大陆</button>
+ <button class="btn-sm" onclick="setRandomIP('world')">海外</button>
+ </div>
+
+ <div class="stat-row">
+ <label class="row-label">关注</label>
+ <input class="stat-input-custom" type="text" id="input-follow-custom" placeholder="自定义" value="37" oninput="setCustomStat('follow')">
+ <button class="btn-sm" onclick="setStat('follow', 0, 100)">孤僻</button>
+ <button class="btn-sm" onclick="setStat('follow', 100, 1000)">平凡</button>
+ <button class="btn-sm" onclick="setStat('follow', 1000, 10000)">交际花</button>
+ </div>
+
+ <div class="stat-row">
+ <label class="row-label">粉丝</label>
+ <input class="stat-input-custom" type="text" id="input-fans-custom" placeholder="自定义" value="42" oninput="setCustomStat('fans')">
+ <button class="btn-sm" onclick="setStat('fans', 0, 100)">透明人</button>
+ <button class="btn-sm" onclick="setStat('fans', 100, 1000)">小有名气</button>
+ <button class="btn-sm" onclick="setStat('fans', 1000, 100000)">世女一</button>
+ </div>
+
+ <div class="stat-row">
+ <label class="row-label">获赞</label>
+ <input class="stat-input-custom" type="text" id="input-likes-custom" placeholder="自定义" value="430" oninput="setCustomStat('likes')">
+ <button class="btn-sm" onclick="setStat('likes', 0, 1000)">无人在意</button>
+ <button class="btn-sm" onclick="setStat('likes', 1000, 10000)">一般般</button>
+ <button class="btn-sm" onclick="setStat('likes', 10000, 1000000)">无人之境</button>
+ </div>
+
+ <div class="textarea-group">
+ <label>个人简介</label>
+ <textarea id="input-bio" oninput="updatePreview()">点击这里，填写简介...</textarea>
+ </div>
+ </div>
+
+ <div class="inline-title-header">
+ <span class="preview-title-main">实时预览</span>
+ <span class="preview-title-sub">402 x 874 (iPhone 17)</span>
+ </div>
+
+ <div class="preview-section">
+ <div class="btn-row">
+ <button class="btn-export" id="export-btn" onclick="exportPNG()">保存图片</button>
+ <button class="btn-reset" onclick="resetDefaults()">恢复默认</button>
+ </div>
+
+ <div class="phone-wrapper" id="phone-wrapper">
+ <div class="scale-box" id="scale-box">
+ 
+ <div class="canvas-target" id="export-target">
+ 
+ <div class="status-bar-ios-custom">
+ <div class="time-outer-box">
+ <div class="custom-time-container">
+ <span class="custom-time-text" id="preview-status-time">09:41</span>
+ </div>
+ </div>
+ 
+ <div class="icons-outer-box">
+ <img src="avatars/bars.svg" class="cellular-img" alt="蜂巢信号" width="19" height="12">
+ <img src="avatars/wifi.svg" class="wifi-img" alt="无线网" width="17" height="12">
+ 
+ <div class="battery-group">
+ <img src="avatars/battery.svg" class="battery-bg-img" alt="电池外框" width="100" height="22">
+ <div class="battery-capacity-box" id="battery-capacity-box"></div>
+ </div>
+ </div>
+
+ </div>
+
+ <div class="app-top-nav">
+ <div class="nav-btn-svg">
+ <svg width="12" height="20" viewBox="0 0 12 20" fill="none"><path d="M10 2L2 10L10 18" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+ </div>
+ <div class="nav-btn-svg">
+ <svg width="20" height="6" viewBox="0 0 20 6" fill="white"><circle cx="3" cy="3" r="2.5"/><circle cx="10" cy="3" r="2.5"/><circle cx="17" cy="3" r="2.5"/></svg>
+ </div>
+ </div>
+
+ <div class="profile-header">
+ <div class="avatar-row">
+ <img class="avatar-img" id="preview-avatar" src="avatars/user01.jpg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'80\'><circle cx=\'40\' cy=\'40\' r=\'40\' fill=\'%23FF2442\'/></svg>'" alt="头像">
+ <div class="user-info-main">
+ <div class="nickname-row">
+ <span class="nickname" id="preview-nickname">liquesco</span>
+ </div>
+ <div class="sub-info" id="preview-userid">小红书号：liquesco_</div>
+ <div class="sub-info" id="preview-ip">IP：浙江</div>
+ </div>
+ </div>
+
+ <div class="stats-row">
+ <div class="stats-item"><span class="num" id="preview-follow">37</span><span class="label">关注</span></div>
+ <div class="stats-item"><span class="num" id="preview-fans">42</span><span class="label">粉丝</span></div>
+ <div class="stats-item"><span class="num" id="preview-likes">430</span><span class="label">获赞与收藏</span></div>
+ </div>
+
+ <div class="bio-text" id="preview-bio">点击这里，填写简介...</div>
+
+ <div class="action-btns">
+ <div class="btn-follow">关注</div>
+ <div class="btn-msg">发私信</div>
+ <div class="btn-more-user">
+ <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+ </div>
+ </div>
+ </div>
+
+ <div class="content-body">
+ <div class="tabs-bar">
+ <div class="tab-item active">笔记</div>
+ <div class="tab-item">收藏</div>
+ <div class="tab-item">赞过</div>
+ <div class="search-icon-box">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+ </div>
+ </div>
+
+ <div class="feed-grid">
+ <div class="feed-col">
+ <div class="note-card">
+ <div class="card-img-block" style="background: #e2e8f0;">
+ <div class="pin-badge">置顶</div>
+ </div>
+ <div class="card-title">这是我们的 Showreel 2026</div>
+ <div class="card-footer">
+ <div class="author-info">
+ <div class="author-avatar"></div>
+ <div class="author-text-col">
+ <span class="author-name">liquesco</span>
+ <span class="note-date">12-08</span>
+ </div>
+ </div>
+ <div class="like-box">
+ <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+ <span>528</span>
+ </div>
+ </div>
+ </div>
+ <div class="note-card">
+ <div class="card-img-block" style="background: #1e293b;"></div>
+ <div class="card-title">WORKS BRANDING</div>
+ <div class="card-footer">
+ <div class="author-info">
+ <div class="author-avatar"></div>
+ <div class="author-text-col">
+ <span class="author-name">liquesco</span>
+ <span class="note-date">04-12</span>
+ </div>
+ </div>
+ <div class="like-box">
+ <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+ <span>102</span>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div class="feed-col">
+ <div class="note-card">
+ <div class="card-img-block" style="background: #facc15;">
+ <div class="pin-badge">置顶</div>
+ </div>
+ <div class="card-title">招聘 | 小红书 REDesign 招人啦 📢</div>
+ <div class="card-footer">
+ <div class="author-info">
+ <div class="author-avatar"></div>
+ <div class="author-text-col">
+ <span class="author-name">liquesco</span>
+ <span class="note-date">12-17</span>
+ </div>
+ </div>
+ <div class="like-box">
+ <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+ <span>2267</span>
+ </div>
+ </div>
+ </div>
+ <div class="note-card">
+ <div class="card-img-block" style="background: #cbd5e1;"></div>
+ <div class="card-title">WORKS BRANDING</div>
+ <div class="card-footer">
+ <div class="author-info">
+ <div class="author-avatar"></div>
+ <div class="author-text-col">
+ <span class="author-name">liquesco</span>
+ <span class="note-date">03-08</span>
+ </div>
+ </div>
+ <div class="like-box">
+ <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.78-8.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+ <span>89</span>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ </div>
+
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <!-- 瀑布流 Tab 内容 -->
+ <div id="tab-waterfall" style="display:none;">
+ <div class="blank-page-panel">空白页</div>
+ </div>
+
+ <!-- 帖子详情 Tab 内容 -->
+ <div id="tab-detail" style="display:none;">
+ <div class="blank-page-panel">空白页</div>
+ </div>
+
+ <!-- 更多设置 Tab 内容 -->
+ <div id="tab-settings" style="display:none;">
+ <div class="blank-page-panel">空白页</div>
+ </div>
+
+ </div>
+
+ <div class="mobile-export-modal" id="mobile-modal">
+ <button class="btn-close" onclick="closeMobileModal()">✕</button>
+ <p>长按图片即可保存至手机相册</p>
+ <div class="modal-img-container">
+ <img id="modal-img" src="" alt="生成预览">
+ </div>
+ </div>
+
+ <script>
+ const cnProvinces = ['浙江', '上海', '北京', '广东', '江苏', '四川', '湖南', '山东', '安徽', '福建', '江西', '湖北', '河南', '河北', '山西', '陕西', '甘肃', '青海', '辽宁', '吉林', '黑龙江', '内蒙古', '新疆', '西藏', '宁夏', '广西', '海南', '重庆', '天津', '贵州', '云南', '中国香港', '中国澳门', '中国台湾'];
+ const worldCountries = ['日本', '美国', '英国', '法国', '韩国', '新加坡', '澳大利亚', '加拿大', '德国', '意大利', '西班牙', '葡萄牙', '荷兰', '比利时', '瑞士', '瑞典', '挪威', '丹麦', '芬兰', '冰岛', '爱尔兰', '奥地利', '波兰', '捷克', '匈牙利', '希腊', '土耳其', '俄罗斯', '乌克兰', '印度', '巴基斯坦', '孟加拉国', '斯里兰卡', '尼泊尔', '泰国', '越南', '马来西亚', '印度尼西亚', '菲律宾', '柬埔寨', '缅甸', '老挝', '蒙古', '哈萨克斯坦', '乌兹别克斯坦', '伊朗', '伊拉克', '以色列', '沙特阿拉伯', '阿联酋', '卡塔尔', '科威特', '埃及', '南非', '尼日利亚', '肯尼亚', '埃塞Ethiopia', '摩洛哥', '巴西', '阿根廷', '智利', '秘鲁', '哥伦比亚', '委内瑞拉', '墨西哥', '古巴', '新西兰'];
+
+ const TARGET_WIDTH = 402;
+ const TARGET_HEIGHT = 874;
+ const MAX_BATTERY_WIDTH = 19.33; // 适配原生图标可视宽度
+
+ const defaultData = {
+ timeHour: '09',
+ timeMinute: '41',
+ statusBattery: '80',
+ nickname: 'liquesco',
+ userId: 'liquesco_',
+ ipCity: '浙江',
+ avatarUrl: 'avatars/user01.jpg',
+ bio: '点击这里，填写简介...',
+ follow: '37',
+ fans: '42',
+ likes: '430'
+ };
+
+ let userData = { ...defaultData };
+ let isWheelInited = false;
+
+ function switchNav(tabName) {
+ const tabs = ['profile', 'waterfall', 'detail', 'settings'];
+ tabs.forEach(t => {
+ const btn = document.getElementById(`btn-${t}`);
+ const content = document.getElementById(`tab-${t}`);
+ if (btn) btn.classList.remove('active');
+ if (content) content.style.display = 'none';
+ });
+
+ const activeBtn = document.getElementById(`btn-${tabName}`);
+ const activeContent = document.getElementById(`tab-${tabName}`);
+ if (activeBtn) activeBtn.classList.add('active');
+ if (activeContent) activeContent.style.display = 'block';
+
+ if (tabName === 'profile') {
+ setTimeout(adjustScale, 50);
+ }
+ }
+
+ function formatStatNumber(valStr) {
+ const num = parseInt(valStr);
+ if (isNaN(num)) return valStr || '0';
+ if (num < 10000) {
+ return num.toString();
+ }
+ const formatted = (Math.floor(num / 1000) / 10).toString();
+ return formatted + '万';
+ }
+
+ function adjustScale() {
+ const wrapper = document.getElementById('phone-wrapper');
+ const scaleBox = document.getElementById('scale-box');
+ const target = document.getElementById('export-target');
+ if (!wrapper || !scaleBox || !target) return;
+ 
+ const containerWidth = wrapper.clientWidth;
+ const scale = containerWidth / TARGET_WIDTH;
+ 
+ target.style.transform = `scale(${scale})`;
+ scaleBox.style.height = `${TARGET_HEIGHT * scale}px`;
+ }
+
+ window.addEventListener('resize', adjustScale);
+ window.addEventListener('DOMContentLoaded', adjustScale);
+
+ function updateStatusHeader() {
+ let hour = document.getElementById('input-time-hour').value;
+ let minute = document.getElementById('input-time-minute').value;
+ const batteryVal = parseInt(document.getElementById('input-status-battery').value);
+
+ hour = hour.padStart(2, '0').slice(-2);
+ minute = minute.padStart(2, '0').slice(-2);
+
+ document.getElementById('preview-status-time').innerText = `${hour}:${minute}`;
+ document.getElementById('battery-num-text').innerText = `${isNaN(batteryVal) ? 0 : batteryVal}%`;
+ 
+ const capacityBox = document.getElementById('battery-capacity-box');
+ if (capacityBox) {
+ const currentVal = isNaN(batteryVal) ? 0 : batteryVal;
+ const calculatedWidth = currentVal === 0 ? 0 : 2.5 + (currentVal / 100) * (MAX_BATTERY_WIDTH - 2.5);
+ capacityBox.style.width = `${calculatedWidth}px`;
+ capacityBox.style.display = currentVal === 0 ? 'none' : 'block';
+ capacityBox.style.backgroundColor = currentVal <= 20 ? '#FF3B30' : '#FFFFFF';
+ }
+ }
+
+ function setRandomTimePeriod(period) {
+ let isNow = false;
+ let minHour = 0, maxHour = 23;
+ if (period === 'morning') {
+ minHour = 6; maxHour = 13;
+ } else if (period === 'afternoon') {
+ minHour = 14; maxHour = 21;
+ } else if (period === 'night') {
+ minHour = 22; maxHour = 5;
+ } else if (period === 'now') {
+ isNow = true;
+ }
+
+ let h, m;
+ if (isNow) {
+ const now = new Date();
+ h = String(now.getHours()).padStart(2, '0');
+ m = String(now.getMinutes()).padStart(2, '0');
+ } else {
+ h = String(Math.floor(Math.random() * (maxHour - minHour + 1)) + minHour).padStart(2, '0');
+ m = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+ }
+
+ document.getElementById('input-time-hour').value = h;
+ document.getElementById('input-time-minute').value = m;
+
+ if (typeof updateStatusHeader === 'function') {
+ updateStatusHeader();
+ }
+ }
+
+ function initTimeWheel() {
+ if (isWheelInited) return;
+ const hourCol = document.getElementById('wheel-hour-col');
+ const minCol = document.getElementById('wheel-min-col');
+
+ let hourHtml = '<div class="picker-wheel-spacer"></div>';
+ for (let i = 0; i < 24; i++) {
+ const val = i < 10 ? '0' + i : '' + i;
+ hourHtml += `<div class="picker-wheel-item" onclick="scrollWheelToItem('wheel-hour-col', ${i})">${val}</div>`;
+ }
+ hourHtml += '<div class="picker-wheel-spacer"></div>';
+ hourCol.innerHTML = hourHtml;
+
+ let minHtml = '<div class="picker-wheel-spacer"></div>';
+ for (let i = 0; i < 60; i++) {
+ const val = i < 10 ? '0' + i : '' + i;
+ minHtml += `<div class="picker-wheel-item" onclick="scrollWheelToItem('wheel-min-col', ${i})">${val}</div>`;
+ }
+ minHtml += '<div class="picker-wheel-spacer"></div>';
+ minCol.innerHTML = minHtml;
+
+ isWheelInited = true;
+ }
+
+ function scrollWheelToItem(colId, index) {
+ const col = document.getElementById(colId);
+ if (col) {
+ col.scrollTo({ top: index * 30, behavior: 'smooth' });
+ }
+ }
+
+ function toggleTimeWheelModal(e) {
+ if (e) e.stopPropagation();
+ const popover = document.getElementById('time-wheel-popover');
+ if (popover.style.display === 'block') {
+ closeTimeWheelModal();
+ return;
+ }
+
+ initTimeWheel();
+ const currentH = parseInt(document.getElementById('input-time-hour').value) || 0;
+ const currentM = parseInt(document.getElementById('input-time-minute').value) || 0;
+
+ popover.style.display = 'block';
+
+ setTimeout(() => {
+ const hourCol = document.getElementById('wheel-hour-col');
+ const minCol = document.getElementById('wheel-min-col');
+ if (hourCol) hourCol.scrollTop = Math.min(Math.max(currentH, 0), 23) * 30;
+ if (minCol) minCol.scrollTop = Math.min(Math.max(currentM, 0), 59) * 30;
+ }, 50);
+ }
+
+ function closeTimeWheelModal() {
+ document.getElementById('time-wheel-popover').style.display = 'none';
+ }
+
+ document.addEventListener('click', function(e) {
+ const popover = document.getElementById('time-wheel-popover');
+ if (popover && popover.style.display === 'block') {
+ closeTimeWheelModal();
+ }
+ });
+
+ function confirmTimeWheel() {
+ const hourCol = document.getElementById('wheel-hour-col');
+ const minCol = document.getElementById('wheel-min-col');
+
+ const hIdx = Math.round(hourCol.scrollTop / 30);
+ const mIdx = Math.round(minCol.scrollTop / 30);
+
+ const finalH = Math.min(Math.max(hIdx, 0), 23);
+ const finalM = Math.min(Math.max(mIdx, 0), 59);
+
+ document.getElementById('input-time-hour').value = finalH < 10 ? '0' + finalH : '' + finalH;
+ document.getElementById('input-time-minute').value = finalM < 10 ? '0' + finalM : '' + finalM;
+
+ updateStatusHeader();
+ closeTimeWheelModal();
+ }
+
+ function updatePreview() {
+ userData.nickname = document.getElementById('input-nickname').value || 'liquesco';
+ userData.userId = document.getElementById('input-userid').value || 'liquesco_';
+ userData.bio = document.getElementById('input-bio').value;
+
+ document.getElementById('preview-nickname').innerText = userData.nickname;
+ document.getElementById('preview-userid').innerText = '小红书号：' + userData.userId;
+ document.getElementById('preview-bio').innerHTML = userData.bio.replace(/\n/g, '<br>');
+ document.getElementById('preview-ip').innerText = 'IP：' + userData.ipCity;
+ }
+
+ function randomAvatar() {
+ const randomNum = Math.floor(Math.random() * 18) + 1;
+ const formattedNum = randomNum < 10 ? '0' + randomNum : randomNum;
+ userData.avatarUrl = `avatars/user${formattedNum}.jpg`;
+ document.getElementById('preview-avatar').src = userData.avatarUrl;
+ }
+
+ function uploadAvatar(event) {
+ const file = event.target.files[0];
+ if (file) {
+ const reader = new FileReader();
+ reader.onload = function(e) {
+ userData.avatarUrl = e.target.result;
+ document.getElementById('preview-avatar').src = userData.avatarUrl;
+ };
+ reader.readAsDataURL(file);
+ }
+ }
+
+ function setRandomIP(type) {
+ if (type === 'cn') {
+ userData.ipCity = cnProvinces[Math.floor(Math.random() * cnProvinces.length)];
+ } else {
+ userData.ipCity = worldCountries[Math.floor(Math.random() * worldCountries.length)];
+ }
+ document.getElementById('input-ip-custom').value = userData.ipCity;
+ updatePreview();
+ }
+
+ function setCustomIP() {
+ const val = document.getElementById('input-ip-custom').value.trim();
+ userData.ipCity = val || '未知';
+ updatePreview();
+ }
+
+ function setStat(type, min, max) {
+ const val = Math.floor(Math.random() * (max - min + 1)) + min;
+ userData[type] = val.toString();
+ 
+ const inputCustom = document.getElementById(`input-${type}-custom`);
+ if (inputCustom) inputCustom.value = val;
+
+ document.getElementById(`preview-${type}`).innerText = formatStatNumber(userData[type]);
+ }
+
+ function setCustomStat(type) {
+ const val = document.getElementById(`input-${type}-custom`).value.trim();
+ userData[type] = val || '0';
+ document.getElementById(`preview-${type}`).innerText = formatStatNumber(userData[type]);
+ }
+
+ function resetDefaults() {
+ document.getElementById('input-time-hour').value = defaultData.timeHour;
+ document.getElementById('input-time-minute').value = defaultData.timeMinute;
+ document.getElementById('input-status-battery').value = defaultData.statusBattery;
+ document.getElementById('input-nickname').value = defaultData.nickname;
+ document.getElementById('input-userid').value = defaultData.userId;
+ 
+ document.getElementById('input-ip-custom').value = defaultData.ipCity;
+ document.getElementById('input-follow-custom').value = defaultData.follow;
+ document.getElementById('input-fans-custom').value = defaultData.fans;
+ document.getElementById('input-likes-custom').value = defaultData.likes;
+
+ document.getElementById('input-bio').value = defaultData.bio;
+
+ userData = { ...defaultData };
+
+ document.getElementById('preview-avatar').src = defaultData.avatarUrl;
+ document.getElementById('preview-follow').innerText = formatStatNumber(defaultData.follow);
+ document.getElementById('preview-fans').innerText = formatStatNumber(defaultData.fans);
+ document.getElementById('preview-likes').innerText = formatStatNumber(defaultData.likes);
+
+ updateStatusHeader();
+ updatePreview();
+ }
+
+ function isMobile() {
+ return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+ }
+
+ function closeMobileModal() {
+ document.getElementById('mobile-modal').style.display = 'none';
+ document.body.classList.remove('no-scroll'); 
+ }
+
+ function exportPNG() {
+ const exportBtn = document.getElementById('export-btn');
+ const target = document.getElementById('export-target');
+ 
+ exportBtn.innerText = '正在生成...';
+ exportBtn.disabled = true;
+
+ html2canvas(target, {
+ width: TARGET_WIDTH,
+ height: TARGET_HEIGHT,
+ scale: 2,
+ useCORS: true,
+ allowTaint: true,
+ backgroundColor: '#5b6571',
+ imageTimeout: 0,
+ onclone: (clonedDoc) => {
+ const clonedTarget = clonedDoc.getElementById('export-target');
+ if (clonedTarget) {
+ clonedTarget.style.transform = 'none';
+ }
+ }
+ }).then(canvas => {
+ exportBtn.innerText = '保存图片';
+ exportBtn.disabled = false;
+
+ const dataUrl = canvas.toDataURL('image/png');
+
+ if (isMobile()) {
+ const modalImg = document.getElementById('modal-img');
+ modalImg.src = dataUrl;
+ document.getElementById('mobile-modal').style.display = 'flex';
+ document.body.classList.add('no-scroll');
+ } else {
+ const link = document.createElement('a');
+ link.download = 'Rednote_Screenshot_402x874.png';
+ link.href = dataUrl;
+ document.body.appendChild(link);
+ link.click();
+ document.body.removeChild(link);
+ }
+ }).catch(err => {
+ console.error('导出失败:', err);
+ exportBtn.innerText = '保存图片';
+ exportBtn.disabled = false;
+ alert('导出失败，请重试');
+ });
+ }
+
+ setTimeout(() => {
+ adjustScale();
+ updateStatusHeader();
+ }, 50);
+ </script>
+</body>
+</html>
