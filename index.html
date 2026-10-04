@@ -18,15 +18,15 @@
  flex-shrink: 0;
  }
  * { 
- box-sizing: border-box; 
- margin: 0; 
- padding: 0; 
- font-family: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif; 
- -webkit-tap-highlight-color: transparent;
+box-sizing: border-box; 
+margin: 0; 
+padding: 0; 
+font-family: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+-webkit-tap-highlight-color: transparent;
  touch-action: manipulation;
  }
  
- html, body {
+html, body {
  background-color: #f4f5f7;
  color: #333;
  min-height: 100%;
@@ -38,29 +38,36 @@
  }
 
  .container { 
- max-width: 480px; 
- margin: 16px auto; 
- padding: 0 12px 30px 12px; 
- }
+max-width: 390px; 
+margin: 16px auto; 
+padding: 0 10px 30px 10px; 
+}
 
  .header-branding {
  margin-bottom: 20px;
  text-align: left;
+ position: relative;
+ }
+ .header-title-row {
+ display: flex;
+ justify-content: space-between;
+ align-items: flex-start;
  }
  .header-title {
- font-size: 30px;
+ font-size: 26px;
  font-weight: 800;
  color: #111;
- line-height: 1.1;
- margin-bottom: 4px;
+ line-height: 1.5;
+ margin-bottom: 0px;
  letter-spacing: -0.5px;
  }
  .header-sub {
- font-size: 14px;
+ font-size: 13px;
  color: #111;
- font-weight: 800;
+ font-weight: 700;
  font-family: -apple-system, BlinkMacSystemFont, "SF Mono", Consolas, monospace;
  margin-bottom: 4px;
+ margin-top: 0px;
  letter-spacing: 1px;
  }
  .header-comment {
@@ -68,6 +75,121 @@
  color: #888;
  font-weight: 500;
  margin-bottom: 14px;
+ }
+
+ /* 右上角头像按钮 */
+ .user-avatar-btn {
+ width: 40px;
+ height: 40px;
+ border-radius: 50%;
+ border: 2px solid #FF2442;
+ cursor: pointer;
+ object-fit: cover;
+ flex-shrink: 0;
+ box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+ transition: transform 0.15s ease;
+ }
+ .user-avatar-btn:active {
+ transform: scale(0.95);
+ }
+
+ /* 关联角色弹窗 */
+ .user-modal-overlay {
+ display: none;
+ position: fixed;
+ top: 0;
+ left: 0;
+ width: 100vw;
+ height: 100vh;
+ background: rgba(0, 0, 0, 0.4);
+ backdrop-filter: blur(4px);
+ z-index: 1000;
+ justify-content: center;
+ align-items: center;
+ padding: 20px;
+ }
+ .user-modal-card {
+ background: #ffffff;
+ border-radius: 16px;
+ width: 100%;
+ max-width: 340px;
+ padding: 18px;
+ box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+ animation: modalIn 0.2s ease-out;
+ }
+ @keyframes modalIn {
+ from { opacity: 0; transform: scale(0.95); }
+ to { opacity: 1; transform: scale(1); }
+ }
+ .user-modal-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 12px;
+ padding-bottom: 8px;
+ border-bottom: 1px solid #f0f0f0;
+ font-weight: 700;
+ font-size: 15px;
+ color: #222;
+ }
+ .user-modal-close {
+ cursor: pointer;
+ font-size: 18px;
+ color: #999;
+ border: none;
+ background: none;
+ }
+ .user-list {
+ display: flex;
+ flex-direction: column;
+ gap: 10px;
+ max-height: 260px;
+ overflow-y: auto;
+ }
+ .user-item {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ padding: 8px 10px;
+ border-radius: 10px;
+ background: #f9f9f9;
+ border: 1px solid #eee;
+ cursor: pointer;
+ transition: background 0.15s;
+ }
+ .user-item:hover, .user-item.active {
+ background: #fff0f2;
+ border-color: #ffd1d7;
+ }
+ .user-item-avatar {
+ width: 36px;
+ height: 36px;
+ border-radius: 50%;
+ object-fit: cover;
+ }
+ .user-item-info {
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ overflow: hidden;
+ }
+ .user-item-name {
+ font-size: 13px;
+ font-weight: 700;
+ color: #222;
+ }
+ .user-item-id {
+ font-size: 11px;
+ color: #888;
+ }
+ .user-item-edit {
+ font-size: 14px;
+ cursor: pointer;
+ opacity: 0.7;
+ padding: 4px;
+ }
+ .user-item-edit:hover {
+ opacity: 1;
  }
 
  .header-nav-btns {
@@ -126,11 +248,11 @@
  justify-content: center;
  }
  
- .panel {
+.panel {
  background: white;
  border-radius: 14px;
- padding: 14px;
- margin-bottom: 16px;
+ padding: 12px;
+ margin-bottom: 14px;
  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
  }
 
@@ -177,7 +299,7 @@
  display: flex;
  align-items: center;
  gap: 2px; 
- flex-shrink: 0;
+flex-shrink: 0;
  }
  .time-box-item {
  display: flex;
@@ -208,7 +330,7 @@
  flex: 1;
  }
  
- .time-random-btns .btn-sm {
+.time-random-btns .btn-sm {
  flex: 1;
  padding: 0px 4px;
  height: 32px;
@@ -384,13 +506,13 @@
 
  .stat-input-custom {
  background: #fafafa; 
- flex: 1.2; 
- min-width: 0; 
- padding: 8px; 
- border: 1px solid #e0e0e0; 
- border-radius: 8px; 
- font-size: 12px; 
- outline: none;
+flex: 1.2; 
+min-width: 0; 
+padding: 8px; 
+border: 1px solid #e0e0e0; 
+border-radius: 8px; 
+font-size: 12px; 
+outline: none;
  }
 
  .textarea-group { margin-bottom: 10px; }
@@ -400,17 +522,18 @@
  }
 
  .inline-title-header {
- margin-bottom: 10px;
+ margin-bottom: 8px;
  display: flex;
  align-items: baseline;
  gap: 8px;
  padding-left: 2px;
  }
  .preview-title-main {
- font-size: 18px;
+ font-size: 16px;
  font-weight: bold;
  color: #222;
  line-height: 1.2;
+ display: inline-block;
  }
  .preview-title-sub {
  font-size: 12px;
@@ -421,7 +544,7 @@
  .preview-section {
  background: white;
  border-radius: 14px;
- padding: 14px;
+ padding: 12px;
  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
  display: flex;
  flex-direction: column;
@@ -487,6 +610,19 @@
  transform-origin: top left;
  color: #fff;
  overflow: visible;
+ background-size: cover;
+ background-position: center;
+ }
+
+ .bg-overlay-layer {
+ position: absolute;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background: rgba(0,0,0,0.2);
+ z-index: 1;
+ pointer-events: none;
  }
 
  .status-bar-ios-custom {
@@ -593,6 +729,8 @@
  align-items: center;
  padding: 0 18px;
  margin-top: 59px;
+ position: relative;
+ z-index: 2;
  }
  .nav-btn-svg {
  width: 24px;
@@ -605,6 +743,8 @@
 
  .profile-header {
  padding: 10px 20px 16px 20px;
+ position: relative;
+ z-index: 2;
  }
  .avatar-row {
  display: flex;
@@ -656,7 +796,7 @@
  line-height: 1.4;
  }
  
- .action-btns {
+.action-btns {
  display: flex;
  gap: 10px;
  margin-top: 14px;
@@ -703,6 +843,8 @@
  display: flex;
  flex-direction: column;
  overflow: hidden;
+ position: relative;
+ z-index: 2;
  }
 
  .tabs-bar {
@@ -893,30 +1035,118 @@
 
  <div class="container">
  <div class="header-branding">
+ <div class="header-title-row">
  <div class="header-title">小红书生成器</div>
+ <img id="header-user-avatar" class="user-avatar-btn" src="./avatars/user01.jpg" alt="账号头像" onclick="openUserModal()" title="切换用户角色">
+ </div>
  <div class="header-sub">fakerednote generator 0.1.0-wip</div>
- <div class="header-comment">编辑内容、实时预览，再导出高清png。所有数据只在浏览器中处理，不上传网络。</div>
+ <div class="header-comment">生成的图片已添加数字水印，请勿用于非法用途<br>本生成器由AI辅助创作</div>
  <div class="header-nav-btns">
  <button id="btn-profile" class="nav-btn-item active" onclick="switchNav('profile')">
- <span class="dot"></span>个人资料
+ <span class="dot"></span>主页
  </button>
  <button id="btn-waterfall" class="nav-btn-item" onclick="switchNav('waterfall')">
- <span class="dot"></span>瀑布流
+ <span class="dot"></span>笔记
  </button>
  <button id="btn-detail" class="nav-btn-item" onclick="switchNav('detail')">
- <span class="dot"></span>帖子详情
+ <span class="dot"></span>推荐流
  </button>
  <button id="btn-settings" class="nav-btn-item" onclick="switchNav('settings')">
- <span class="dot"></span>更多设置
+ <span class="dot"></span>私信
  </button>
  </div>
  </div>
 
- <!-- 个人资料 Tab 内容 -->
+ <!-- 用户角色选择弹窗 -->
+ <div class="user-modal-overlay" id="user-modal-overlay" onclick="closeUserModal(event)">
+ <div class="user-modal-card" onclick="event.stopPropagation()">
+ <div class="user-modal-header">
+ <span>切换已有角色</span>
+ <button class="user-modal-close" onclick="closeUserModal()">✕</button>
+ </div>
+ <div class="user-list" id="user-list-container">
+ <!-- 列表将由 JS 动态渲染 -->
+ </div>
+ </div>
+ </div>
+
+ <!-- 主页 Tab 内容 -->
  <div id="tab-profile">
+ 
+ <!-- 卡片 1: 个人资料与背景图 -->
  <div class="inline-title-header">
  <span class="preview-title-main">个人资料</span>
- <span class="preview-title-sub">设置基础信息和个人资料</span>
+ <span class="preview-title-sub">账号核心属性设置</span>
+ </div>
+
+ <div class="panel">
+ <div class="row-group">
+ <label>名字</label>
+ <input type="text" id="input-nickname" value="liquesco" oninput="updatePreview()">
+ </div>
+
+ <div class="row-group">
+ <label>用户ID</label>
+ <div class="input-with-prefix">
+ <input type="text" id="input-userid" value="liquesco_" oninput="updatePreview()">
+ </div>
+ </div>
+
+ <div class="row-group">
+ <label>头像</label>
+ <button class="btn-sm" onclick="randomAvatar()">随机</button>
+ <button class="btn-sm" onclick="document.getElementById('file-input').click()">上传</button>
+ <input type="file" id="file-input" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
+ </div>
+
+ <div class="row-group">
+ <label>背景图</label>
+ <button class="btn-sm" onclick="randomBg()">随机</button>
+ <button class="btn-sm" onclick="document.getElementById('bg-file-input').click()">上传</button>
+ <input type="file" id="bg-file-input" accept="image/*" style="display:none" onchange="uploadBg(event)">
+ </div>
+
+ <div class="ip-row">
+ <label class="row-label">IP属地</label>
+ <input class="stat-input-custom" type="text" id="input-ip-custom" placeholder="自定义" value="浙江" oninput="setCustomIP()">
+ <button class="btn-sm" onclick="setRandomIP('cn')">大陆</button>
+ <button class="btn-sm" onclick="setRandomIP('world')">海外</button>
+ </div>
+
+ <div class="stat-row">
+ <label class="row-label">关注</label>
+ <input class="stat-input-custom" type="text" id="input-follow-custom" placeholder="自定义" value="37" oninput="setCustomStat('follow')">
+ <button class="btn-sm" onclick="setStat('follow', 0, 100)">孤僻</button>
+ <button class="btn-sm" onclick="setStat('follow', 100, 1000)">平凡</button>
+ <button class="btn-sm" onclick="setStat('follow', 1000, 10000)">交际花</button>
+ </div>
+
+ <div class="stat-row">
+ <label class="row-label">粉丝</label>
+ <input class="stat-input-custom" type="text" id="input-fans-custom" placeholder="自定义" value="42" oninput="setCustomStat('fans')">
+ <button class="btn-sm" onclick="setStat('fans', 0, 100)">透明人</button>
+ <button class="btn-sm" onclick="setStat('fans', 100, 1000)">小有名气</button>
+ <button class="btn-sm" onclick="setStat('fans', 1000, 100000)">世女一</button>
+ </div>
+
+ <div class="stat-row">
+ <label class="row-label">获赞</label>
+ <input class="stat-input-custom" type="text" id="input-likes-custom" placeholder="自定义" value="430" oninput="setCustomStat('likes')">
+ <button class="btn-sm" onclick="setStat('likes', 0, 1000)">无人在意</button>
+ <button class="btn-sm" onclick="setStat('likes', 1000, 10000)">一般般</button>
+ <button class="btn-sm" onclick="setStat('likes', 10000, 1000000)">无人之境</button>
+ </div>
+
+ <div class="textarea-group">
+ <label>个人简介</label>
+ <textarea id="input-bio" oninput="updatePreview()">点击这里，填写简介...</textarea>
+ </div>
+ </div>
+
+ <!-- 卡片 2: 系统状态 (时间/电量) -->
+ <div class="inline-title-header">
+ <span class="preview-title-main">状态栏控制</span>
+ <span class="preview-title-sub">调整页面顶部状态</span>
  </div>
 
  <div class="panel">
@@ -963,61 +1193,6 @@
  <input type="range" id="input-status-battery" min="0" max="100" value="80" style="flex:1" oninput="updateStatusHeader()">
  <span id="battery-num-text" style="font-size: 12px; min-width: 35px; text-align: right;">80%</span>
  </div>
-
- <div class="row-group">
- <label>名字</label>
- <input type="text" id="input-nickname" value="liquesco" oninput="updatePreview()">
- </div>
-
- <div class="row-group">
- <label>用户ID</label>
- <div class="input-with-prefix">
- <input type="text" id="input-userid" value="liquesco_" oninput="updatePreview()">
- </div>
- </div>
-
- <div class="row-group">
- <label>头像</label>
- <button class="btn-sm" onclick="randomAvatar()">随机</button>
- <button class="btn-sm" onclick="document.getElementById('file-input').click()">上传</button>
- <input type="file" id="file-input" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
- </div>
-
- <div class="ip-row">
- <label class="row-label">IP属地</label>
- <input class="stat-input-custom" type="text" id="input-ip-custom" placeholder="自定义" value="浙江" oninput="setCustomIP()">
- <button class="btn-sm" onclick="setRandomIP('cn')">大陆</button>
- <button class="btn-sm" onclick="setRandomIP('world')">海外</button>
- </div>
-
- <div class="stat-row">
- <label class="row-label">关注</label>
- <input class="stat-input-custom" type="text" id="input-follow-custom" placeholder="自定义" value="37" oninput="setCustomStat('follow')">
- <button class="btn-sm" onclick="setStat('follow', 0, 100)">孤僻</button>
- <button class="btn-sm" onclick="setStat('follow', 100, 1000)">平凡</button>
- <button class="btn-sm" onclick="setStat('follow', 1000, 10000)">交际花</button>
- </div>
-
- <div class="stat-row">
- <label class="row-label">粉丝</label>
- <input class="stat-input-custom" type="text" id="input-fans-custom" placeholder="自定义" value="42" oninput="setCustomStat('fans')">
- <button class="btn-sm" onclick="setStat('fans', 0, 100)">透明人</button>
- <button class="btn-sm" onclick="setStat('fans', 100, 1000)">小有名气</button>
- <button class="btn-sm" onclick="setStat('fans', 1000, 100000)">世女一</button>
- </div>
-
- <div class="stat-row">
- <label class="row-label">获赞</label>
- <input class="stat-input-custom" type="text" id="input-likes-custom" placeholder="自定义" value="430" oninput="setCustomStat('likes')">
- <button class="btn-sm" onclick="setStat('likes', 0, 1000)">无人在意</button>
- <button class="btn-sm" onclick="setStat('likes', 1000, 10000)">一般般</button>
- <button class="btn-sm" onclick="setStat('likes', 10000, 1000000)">无人之境</button>
- </div>
-
- <div class="textarea-group">
- <label>个人简介</label>
- <textarea id="input-bio" oninput="updatePreview()">点击这里，填写简介...</textarea>
- </div>
  </div>
 
  <div class="inline-title-header">
@@ -1034,20 +1209,21 @@
  <div class="phone-wrapper" id="phone-wrapper">
  <div class="scale-box" id="scale-box">
  
- <div class="canvas-target" id="export-target">
+<div class="canvas-target" id="export-target">
+ <div class="bg-overlay-layer"></div>
  
- <div class="status-bar-ios-custom">
+<div class="status-bar-ios-custom">
  <div class="time-outer-box">
  <div class="custom-time-container">
  <span class="custom-time-text" id="preview-status-time">09:41</span>
  </div>
  </div>
  
- <div class="icons-outer-box">
+<div class="icons-outer-box">
  <img src="./avatars/bars.svg" class="cellular-img" alt="蜂巢信号" width="19" height="12">
  <img src="./avatars/wifi.svg" class="wifi-img" alt="无线网" width="17" height="12">
  
- <div class="battery-group">
+<div class="battery-group">
  <img src="./avatars/battery.svg" class="battery-bg-img" alt="电池外框" width="100" height="22">
  <div class="battery-capacity-box" id="battery-capacity-box"></div>
  </div>
@@ -1191,17 +1367,17 @@
  </div>
  </div>
 
- <!-- 瀑布流 Tab 内容 -->
+ <!-- 笔记 Tab 内容 -->
  <div id="tab-waterfall" style="display:none;">
  <div class="blank-page-panel">空白页</div>
  </div>
 
- <!-- 帖子详情 Tab 内容 -->
+ <!-- 推荐流 Tab 内容 -->
  <div id="tab-detail" style="display:none;">
  <div class="blank-page-panel">空白页</div>
  </div>
 
- <!-- 更多设置 Tab 内容 -->
+ <!-- 私信 Tab 内容 -->
  <div id="tab-settings" style="display:none;">
  <div class="blank-page-panel">空白页</div>
  </div>
@@ -1224,6 +1400,13 @@
  const TARGET_HEIGHT = 874;
  const MAX_BATTERY_WIDTH = 19.33; // 适配原生图标可视宽度
 
+ // 预设用户列表
+ let savedUsers = [
+ { id: 'liquesco_', name: 'liquesco', avatar: './avatars/user01.jpg', bg: '', ip: '浙江', follow: '37', fans: '42', likes: '430', bio: '点击这里，填写简介...' },
+ { id: 'red_official', name: 'REDdesign', avatar: './avatars/user02.jpg', bg: '', ip: '上海', follow: '120', fans: '98000', likes: '1200000', bio: '小红书官方设计团队' },
+ { id: 'pixel_art', name: '像素实验室', avatar: './avatars/user03.jpg', bg: '', ip: '北京', follow: '5', fans: '1200', likes: '35000', bio: '分享日常设计与像素艺术' }
+ ];
+
  const defaultData = {
  timeHour: '09',
  timeMinute: '41',
@@ -1232,6 +1415,7 @@
  userId: 'liquesco_',
  ipCity: '浙江',
  avatarUrl: './avatars/user01.jpg',
+ bgUrl: '',
  bio: '点击这里，填写简介...',
  follow: '37',
  fans: '42',
@@ -1240,6 +1424,85 @@
 
  let userData = { ...defaultData };
  let isWheelInited = false;
+
+ function renderUserList() {
+ const listContainer = document.getElementById('user-list-container');
+ if (!listContainer) return;
+ listContainer.innerHTML = '';
+
+ savedUsers.forEach((user, index) => {
+ const itemHtml = `
+ <div class="user-item ${user.id === userData.userId ? 'active' : ''}" onclick="selectUser(${index})">
+ <img class="user-item-avatar" src="${user.avatar}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'36\' height=\'36\'><circle cx=\'18\' cy=\'18\' r=\'18\' fill=\'%23FF2442\'/></svg>'">
+ <div class="user-item-info">
+ <span class="user-item-name">${user.name}</span>
+ <span class="user-item-id">ID: ${user.id}</span>
+ </div>
+ <span class="user-item-edit" title="编辑" onclick="editUser(event, ${index})">✏️</span>
+ </div>
+ `;
+ listContainer.innerHTML += itemHtml;
+ });
+ }
+
+ function openUserModal() {
+ renderUserList();
+ document.getElementById('user-modal-overlay').style.display = 'flex';
+ }
+
+ function closeUserModal(e) {
+ if (e && e.target !== document.getElementById('user-modal-overlay')) return;
+ document.getElementById('user-modal-overlay').style.display = 'none';
+ }
+
+ function selectUser(index) {
+ const u = savedUsers[index];
+ if (!u) return;
+
+ userData.nickname = u.name;
+ userData.userId = u.id;
+ userData.avatarUrl = u.avatar;
+ userData.bgUrl = u.bg || '';
+ userData.ipCity = u.ip || '浙江';
+ userData.follow = u.follow || '0';
+ userData.fans = u.fans || '0';
+ userData.likes = u.likes || '0';
+ userData.bio = u.bio || '';
+
+ document.getElementById('input-nickname').value = userData.nickname;
+ document.getElementById('input-userid').value = userData.userId;
+ document.getElementById('input-ip-custom').value = userData.ipCity;
+ document.getElementById('input-follow-custom').value = userData.follow;
+ document.getElementById('input-fans-custom').value = userData.fans;
+ document.getElementById('input-likes-custom').value = userData.likes;
+ document.getElementById('input-bio').value = userData.bio;
+
+ document.getElementById('header-user-avatar').src = userData.avatarUrl;
+ document.getElementById('preview-avatar').src = userData.avatarUrl;
+ updateBgDisplay();
+
+ document.getElementById('preview-follow').innerText = formatStatNumber(userData.follow);
+ document.getElementById('preview-fans').innerText = formatStatNumber(userData.fans);
+ document.getElementById('preview-likes').innerText = formatStatNumber(userData.likes);
+
+ updatePreview();
+ closeUserModal();
+ }
+
+ function editUser(e, index) {
+ e.stopPropagation();
+ const u = savedUsers[index];
+ const newName = prompt("修改用户名：", u.name);
+ if (newName !== null && newName.trim() !== '') {
+ u.name = newName.trim();
+ if (u.id === userData.userId) {
+ userData.nickname = u.name;
+ document.getElementById('input-nickname').value = u.name;
+ updatePreview();
+ }
+ renderUserList();
+ }
+ }
 
  function switchNav(tabName) {
  const tabs = ['profile', 'waterfall', 'detail', 'settings'];
@@ -1276,10 +1539,10 @@
  const target = document.getElementById('export-target');
  if (!wrapper || !scaleBox || !target) return;
  
- const containerWidth = wrapper.clientWidth;
+const containerWidth = wrapper.clientWidth;
  const scale = containerWidth / TARGET_WIDTH;
  
- target.style.transform = `scale(${scale})`;
+target.style.transform = `scale(${scale})`;
  scaleBox.style.height = `${TARGET_HEIGHT * scale}px`;
  }
 
@@ -1297,7 +1560,7 @@
  document.getElementById('preview-status-time').innerText = `${hour}:${minute}`;
  document.getElementById('battery-num-text').innerText = `${isNaN(batteryVal) ? 0 : batteryVal}%`;
  
- const capacityBox = document.getElementById('battery-capacity-box');
+const capacityBox = document.getElementById('battery-capacity-box');
  if (capacityBox) {
  const currentVal = isNaN(batteryVal) ? 0 : batteryVal;
  const calculatedWidth = currentVal === 0 ? 0 : 2.5 + (currentVal / 100) * (MAX_BATTERY_WIDTH - 2.5);
@@ -1435,6 +1698,7 @@
  const formattedNum = randomNum < 10 ? '0' + randomNum : randomNum;
  userData.avatarUrl = `./avatars/user${formattedNum}.jpg`;
  document.getElementById('preview-avatar').src = userData.avatarUrl;
+ document.getElementById('header-user-avatar').src = userData.avatarUrl;
  }
 
  function uploadAvatar(event) {
@@ -1444,6 +1708,36 @@
  reader.onload = function(e) {
  userData.avatarUrl = e.target.result;
  document.getElementById('preview-avatar').src = userData.avatarUrl;
+ document.getElementById('header-user-avatar').src = userData.avatarUrl;
+ };
+ reader.readAsDataURL(file);
+ }
+ }
+
+ function updateBgDisplay() {
+ const target = document.getElementById('export-target');
+ if (userData.bgUrl) {
+ target.style.backgroundImage = `url('${userData.bgUrl}')`;
+ } else {
+ target.style.backgroundImage = 'none';
+ target.style.backgroundColor = '#FD7086';
+ }
+ }
+
+ function randomBg() {
+ const randomNum = Math.floor(Math.random() * 18) + 1;
+ const formattedNum = randomNum < 10 ? '0' + randomNum : randomNum;
+ userData.bgUrl = `./avatars/user${formattedNum}.jpg`;
+ updateBgDisplay();
+ }
+
+ function uploadBg(event) {
+ const file = event.target.files[0];
+ if (file) {
+ const reader = new FileReader();
+ reader.onload = function(e) {
+ userData.bgUrl = e.target.result;
+ updateBgDisplay();
  };
  reader.readAsDataURL(file);
  }
@@ -1469,7 +1763,7 @@
  const val = Math.floor(Math.random() * (max - min + 1)) + min;
  userData[type] = val.toString();
  
- const inputCustom = document.getElementById(`input-${type}-custom`);
+const inputCustom = document.getElementById(`input-${type}-custom`);
  if (inputCustom) inputCustom.value = val;
 
  document.getElementById(`preview-${type}`).innerText = formatStatNumber(userData[type]);
@@ -1488,7 +1782,7 @@
  document.getElementById('input-nickname').value = defaultData.nickname;
  document.getElementById('input-userid').value = defaultData.userId;
  
- document.getElementById('input-ip-custom').value = defaultData.ipCity;
+document.getElementById('input-ip-custom').value = defaultData.ipCity;
  document.getElementById('input-follow-custom').value = defaultData.follow;
  document.getElementById('input-fans-custom').value = defaultData.fans;
  document.getElementById('input-likes-custom').value = defaultData.likes;
@@ -1497,7 +1791,10 @@
 
  userData = { ...defaultData };
 
+ document.getElementById('header-user-avatar').src = defaultData.avatarUrl;
  document.getElementById('preview-avatar').src = defaultData.avatarUrl;
+ updateBgDisplay();
+
  document.getElementById('preview-follow').innerText = formatStatNumber(defaultData.follow);
  document.getElementById('preview-fans').innerText = formatStatNumber(defaultData.fans);
  document.getElementById('preview-likes').innerText = formatStatNumber(defaultData.likes);
@@ -1513,13 +1810,13 @@
  function closeMobileModal() {
  document.getElementById('mobile-modal').style.display = 'none';
  document.body.classList.remove('no-scroll'); 
- }
+}
 
  function exportPNG() {
  const exportBtn = document.getElementById('export-btn');
  const target = document.getElementById('export-target');
  
- exportBtn.innerText = '正在生成...';
+exportBtn.innerText = '正在生成...';
  exportBtn.disabled = true;
 
  html2canvas(target, {
